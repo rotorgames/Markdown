@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7C8F76D8-C144-4287-AB4F-C4BDC5A1F88B}"
 EndProject
@@ -15,6 +15,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Markdown", "src\Markdown\Markdown.csproj", "{C7D90432-2BB5-4EBF-A0E8-1D7A1BF2661C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkdownTests", "test\MarkdownTests\MarkdownTests.csproj", "{605F9E7A-805A-43BC-B49D-6B517A246478}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdown.Xamarin.Forms", "src\Markdown.Xamarin.Forms\Markdown.Xamarin.Forms.csproj", "{67F9D3A8-F71E-4428-913F-C37AE82CDB24}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdown.Xamarin.Forms.Tests", "test\Markdown.Xamarin.Forms.Tests\Markdown.Xamarin.Forms.Tests.csproj", "{37CB20B3-6E58-4245-A38B-85CCC07393AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +34,14 @@ Global
 		{605F9E7A-805A-43BC-B49D-6B517A246478}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{605F9E7A-805A-43BC-B49D-6B517A246478}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{605F9E7A-805A-43BC-B49D-6B517A246478}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67F9D3A8-F71E-4428-913F-C37AE82CDB24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67F9D3A8-F71E-4428-913F-C37AE82CDB24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67F9D3A8-F71E-4428-913F-C37AE82CDB24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67F9D3A8-F71E-4428-913F-C37AE82CDB24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37CB20B3-6E58-4245-A38B-85CCC07393AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37CB20B3-6E58-4245-A38B-85CCC07393AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37CB20B3-6E58-4245-A38B-85CCC07393AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37CB20B3-6E58-4245-A38B-85CCC07393AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -37,5 +49,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{C7D90432-2BB5-4EBF-A0E8-1D7A1BF2661C} = {7C8F76D8-C144-4287-AB4F-C4BDC5A1F88B}
 		{605F9E7A-805A-43BC-B49D-6B517A246478} = {9E79B352-E1F2-4B44-90E4-680409796852}
+		{67F9D3A8-F71E-4428-913F-C37AE82CDB24} = {7C8F76D8-C144-4287-AB4F-C4BDC5A1F88B}
+		{37CB20B3-6E58-4245-A38B-85CCC07393AF} = {9E79B352-E1F2-4B44-90E4-680409796852}
 	EndGlobalSection
 EndGlobal

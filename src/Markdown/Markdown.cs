@@ -147,6 +147,12 @@ namespace HeyRed.MarkdownSharp
             public string Value;
         }
 
+#if FORMS
+        private const RegexOptions RegexOptionsCompile = RegexOptions.None;
+#else
+        private const RegexOptions RegexOptionsCompile = RegexOptions.Compiled;
+#endif
+
         /// <summary>
         /// maximum nested depth of [] and () supported by the transform; implementation detail
         /// </summary>
@@ -202,7 +208,7 @@ namespace HeyRed.MarkdownSharp
                 backslashPattern += Regex.Escape(@"\" + key) + "|";
             }
 
-            _backslashEscapes = new Regex(backslashPattern.Substring(0, backslashPattern.Length - 1), RegexOptions.Compiled);
+            _backslashEscapes = new Regex(backslashPattern.Substring(0, backslashPattern.Length - 1), RegexOptionsCompile);
         }
 
 
@@ -301,11 +307,11 @@ namespace HeyRed.MarkdownSharp
             return text;
         }
 
-        private static Regex _newlinesLeadingTrailing = new Regex(@"^\n+|\n+\z", RegexOptions.Compiled);
-        private static Regex _newlinesMultiple = new Regex(@"\n{2,}", RegexOptions.Compiled);
-        private static Regex _leadingWhitespace = new Regex(@"^[ ]*", RegexOptions.Compiled);
+        private static Regex _newlinesLeadingTrailing = new Regex(@"^\n+|\n+\z", RegexOptionsCompile);
+        private static Regex _newlinesMultiple = new Regex(@"\n{2,}", RegexOptionsCompile);
+        private static Regex _leadingWhitespace = new Regex(@"^[ ]*", RegexOptionsCompile);
 
-        private static Regex _htmlBlockHash = new Regex("\x1AH\\d+H", RegexOptions.Compiled);
+        private static Regex _htmlBlockHash = new Regex("\x1AH\\d+H", RegexOptionsCompile);
 
         /// <summary>
         /// splits on two or more newlines, to form "paragraphs";    
@@ -435,7 +441,7 @@ namespace HeyRed.MarkdownSharp
                             ["")]
                             [ ]*
                         )?                      # title is optional
-                        (?:\n+|\Z)", _tabWidth - 1), RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+                        (?:\n+|\Z)", _tabWidth - 1), RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptionsCompile);
 
         /// <summary>
         /// Strips link definitions from text, stores the URLs and titles in hash references.
@@ -542,8 +548,8 @@ namespace HeyRed.MarkdownSharp
                   )
                   (             # save in $1
 
-                    # Match from `\n<tag>` to `</tag>\n`, handling nested tags 
-                    # in between.
+# Match from `\n<tag>` to `</tag>\n`, handling nested tags 
+# in between.
                       
                         <($block_tags_b_re)   # start tag = $2
                         $attr>                # attributes followed by > and \n
@@ -562,7 +568,7 @@ namespace HeyRed.MarkdownSharp
                         (?=\n+|\Z)            # followed by a newline or end of document
                       
                   | # Special case just for <hr />. It was easier to make a special 
-                    # case than to make the other regex more complicated.
+# case than to make the other regex more complicated.
                   
                         [ ]{0,$less_than_tab}
                         <hr
@@ -634,7 +640,7 @@ namespace HeyRed.MarkdownSharp
             RepeatString(@" 
             (<[A-Za-z\/!$](?:[^<>]|", _nestDepth) + RepeatString(@")*>)", _nestDepth) +
                                        " # match <tag> and </tag>",
-            RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.ExplicitCapture | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+            RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.ExplicitCapture | RegexOptions.IgnorePatternWhitespace | RegexOptionsCompile);
 
         /// <summary>
         /// returns an array of HTML tokens comprising the input string. Each token is 
@@ -681,7 +687,7 @@ namespace HeyRed.MarkdownSharp
                 \[
                     (.*?)                   # id = $3
                 \]
-            )", GetNestedBracketsPattern()), RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+            )", GetNestedBracketsPattern()), RegexOptions.IgnorePatternWhitespace | RegexOptionsCompile);
 
         private static Regex _anchorInline = new Regex(string.Format(@"
                 (                           # wrap whole match in $1
@@ -700,7 +706,7 @@ namespace HeyRed.MarkdownSharp
                         )?                  # title is optional
                     \)
                 )", GetNestedBracketsPattern(), GetNestedParensPattern()),
-                  RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+                  RegexOptions.IgnorePatternWhitespace | RegexOptionsCompile);
 
         private static Regex _anchorInlineWithTargetBlank = new Regex(string.Format(@"
                 (                           # wrap whole match in $1
@@ -720,14 +726,14 @@ namespace HeyRed.MarkdownSharp
                     \)
                     ([\+])?                 # target blank = $7
                 )", GetNestedBracketsPattern(), GetNestedParensPattern()),
-                  RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+                  RegexOptions.IgnorePatternWhitespace | RegexOptionsCompile);
 
         private static Regex _anchorRefShortcut = new Regex(@"
             (                               # wrap whole match in $1
               \[
                  ([^\[\]]+)                 # link text = $2; can't contain [ or ]
               \]
-            )", RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+            )", RegexOptions.IgnorePatternWhitespace | RegexOptionsCompile);
 
         /// <summary>
         /// Turn Markdown link shortcuts into HTML anchor tags
@@ -893,7 +899,7 @@ namespace HeyRed.MarkdownSharp
                         (.*?)       # id = $3
                     \]
 
-                    )", RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+                    )", RegexOptions.IgnorePatternWhitespace | RegexOptionsCompile);
 
         private static Regex _imagesInline = new Regex(string.Format(@"
               (                     # wrap whole match in $1
@@ -913,7 +919,7 @@ namespace HeyRed.MarkdownSharp
                     )?              # title is optional
                 \)
               )", GetNestedParensPattern()),
-                  RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+                  RegexOptions.IgnorePatternWhitespace | RegexOptionsCompile);
 
         /// <summary>
         /// Turn Markdown image shortcuts into HTML img tags. 
@@ -1007,7 +1013,7 @@ namespace HeyRed.MarkdownSharp
                 (=+|-+)     # $1 = string of ='s or -'s
                 [ ]*
                 \n+",
-            RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+            RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptionsCompile);
 
         private static Regex _headerAtx = new Regex(@"
                 ^(\#{1,6})  # $1 = string of #'s
@@ -1016,7 +1022,7 @@ namespace HeyRed.MarkdownSharp
                 [ ]*
                 \#*         # optional closing #'s (not counted)
                 \n+",
-            RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+            RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptionsCompile);
 
         /// <summary>
         /// Turn Markdown headers into HTML header tags
@@ -1067,7 +1073,7 @@ namespace HeyRed.MarkdownSharp
                 ){2,}         # Group repeated at least twice
                 [ ]*          # Trailing spaces
                 $             # End of line.
-            ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+            ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptionsCompile);
 
         /// <summary>
         /// Turn Markdown horizontal rules into HTML hr tags
@@ -1104,10 +1110,10 @@ namespace HeyRed.MarkdownSharp
             )", string.Format("(?:{0}|{1})", _markerUL, _markerOL), _tabWidth - 1);
 
         private static Regex _listNested = new Regex(@"^" + _wholeList,
-            RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+            RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptionsCompile);
 
         private static Regex _listTopLevel = new Regex(@"(?:(?<=\n\n)|\A\n?)" + _wholeList,
-            RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+            RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptionsCompile);
 
         /// <summary>
         /// Turn Markdown lists into HTML ul and ol and li tags
@@ -1217,7 +1223,7 @@ namespace HeyRed.MarkdownSharp
                     )+
                     )
                     ((?=^[ ]{{0,{0}}}[^ \t\n])|\Z) # Lookahead for non-space at line-start, or end of doc",
-                    _tabWidth), RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+                    _tabWidth), RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptionsCompile);
 
         /// <summary>
         /// /// Turn Markdown 4-space indented code into HTML pre code blocks
@@ -1245,7 +1251,7 @@ namespace HeyRed.MarkdownSharp
                     (.+?)     # $2 = The code block
                     (?<!`)
                     \1
-                    (?!`)", RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Compiled);
+                    (?!`)", RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptionsCompile);
 
         /// <summary>
         /// Turn Markdown `code spans` into HTML code tags
@@ -1289,18 +1295,18 @@ namespace HeyRed.MarkdownSharp
         }
 
         private static Regex _bold = new Regex(@"(\*\*|__) (?=\S) (.+?[*_]*) (?<=\S) \1",
-            RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Compiled);
+            RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptionsCompile);
         private static Regex _semiStrictBold = new Regex(@"(?=.[*_]|[*_])(^|(?=\W__|(?!\*)[\W_]\*\*|\w\*\*\w).)(\*\*|__)(?!\2)(?=\S)((?:|.*?(?!\2).)(?=\S_|\w|\S\*\*(?:[\W_]|$)).)(?=__(?:\W|$)|\*\*(?:[^*]|$))\2",
-            RegexOptions.Singleline | RegexOptions.Compiled);
+            RegexOptions.Singleline | RegexOptionsCompile);
         private static Regex _strictBold = new Regex(@"(^|[\W_])(?:(?!\1)|(?=^))(\*|_)\2(?=\S)(.*?\S)\2\2(?!\2)(?=[\W_]|$)",
-            RegexOptions.Singleline | RegexOptions.Compiled);
+            RegexOptions.Singleline | RegexOptionsCompile);
 
         private static Regex _italic = new Regex(@"(\*|_) (?=\S) (.+?) (?<=\S) \1",
-            RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Compiled);
+            RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptionsCompile);
         private static Regex _semiStrictItalic = new Regex(@"(?=.[*_]|[*_])(^|(?=\W_|(?!\*)(?:[\W_]\*|\D\*(?=\w)\D)).)(\*|_)(?!\2\2\2)(?=\S)((?:(?!\2).)*?(?=[^\s_]_|(?=\w)\D\*\D|[^\s*]\*(?:[\W_]|$)).)(?=_(?:\W|$)|\*(?:[^*]|$))\2",
-            RegexOptions.Singleline | RegexOptions.Compiled);
+            RegexOptions.Singleline | RegexOptionsCompile);
         private static Regex _strictItalic = new Regex(@"(^|[\W_])(?:(?!\1)|(?=^))(\*|_)(?=\S)((?:(?!\2).)*?\S)\2(?!\2)(?=[\W_]|$)",
-            RegexOptions.Singleline | RegexOptions.Compiled);
+            RegexOptions.Singleline | RegexOptionsCompile);
 
         /// <summary>
         /// Turn Markdown *italics* and **bold** into HTML strong and em tags
@@ -1353,7 +1359,7 @@ namespace HeyRed.MarkdownSharp
                 (.+\n)*                 # subsequent consecutive lines
                 \n*                     # blanks
                 )+
-            )", RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline | RegexOptions.Compiled);
+            )", RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline | RegexOptionsCompile);
 
         private static Regex _blockquoteSingleLine = new Regex(@"
             (                           # Wrap whole match in $1
@@ -1361,7 +1367,7 @@ namespace HeyRed.MarkdownSharp
                 ^[ ]*>[ ]?              # '>' at the start of a line
                     .+                # rest of the first line
                 )+
-            )", RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline | RegexOptions.Compiled);
+            )", RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline | RegexOptionsCompile);
 
         /// <summary>
         /// Turn Markdown > quoted blocks into HTML blockquote blocks
@@ -1404,9 +1410,9 @@ namespace HeyRed.MarkdownSharp
         private const string _charEndingUrl = "[-A-Z0-9+&@#/%=~_|\\[\\])]";
 
         private static Regex _autolinkBare = new Regex(@"(<|="")?\b(https?|ftp)(://" + _charInsideUrl + "*" + _charEndingUrl + ")(?=$|\\W)",
-            RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            RegexOptions.IgnoreCase | RegexOptionsCompile);
 
-        private static Regex _endCharRegex = new Regex(_charEndingUrl, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static Regex _endCharRegex = new Regex(_charEndingUrl, RegexOptions.IgnoreCase | RegexOptionsCompile);
 
         private static string handleTrailingParens(Match match)
         {
@@ -1535,7 +1541,7 @@ namespace HeyRed.MarkdownSharp
         }
 
 
-        private static Regex _outDent = new Regex(@"^[ ]{1," + _tabWidth + @"}", RegexOptions.Multiline | RegexOptions.Compiled);
+        private static Regex _outDent = new Regex(@"^[ ]{1," + _tabWidth + @"}", RegexOptions.Multiline | RegexOptionsCompile);
 
         /// <summary>
         /// Remove one level of line-leading spaces
@@ -1546,7 +1552,7 @@ namespace HeyRed.MarkdownSharp
         }
 
 
-        #region Encoding and Normalization
+#region Encoding and Normalization
 
 
         /// <summary>
@@ -1572,8 +1578,8 @@ namespace HeyRed.MarkdownSharp
             return sb.ToString();
         }
 
-        private static Regex _codeEncoder = new Regex(@"&|<|>|\\|\*|_|\{|\}|\[|\]", RegexOptions.Compiled);
-        private static Regex _codeEncoderWithoutEntities = new Regex(@"\\|\*|_|\{|\}|\[|\]", RegexOptions.Compiled);
+        private static Regex _codeEncoder = new Regex(@"&|<|>|\\|\*|_|\{|\}|\[|\]", RegexOptionsCompile);
+        private static Regex _codeEncoderWithoutEntities = new Regex(@"\\|\*|_|\{|\}|\[|\]", RegexOptionsCompile);
 
         /// <summary>
         /// Encode/escape certain Markdown characters inside code blocks and spans where they are literals
@@ -1606,8 +1612,8 @@ namespace HeyRed.MarkdownSharp
         }
 
 
-        private static Regex _amps = new Regex(@"&(?!((#[0-9]+)|(#[xX][a-fA-F0-9]+)|([a-zA-Z][a-zA-Z0-9]*));)", RegexOptions.ExplicitCapture | RegexOptions.Compiled);
-        private static Regex _angles = new Regex(@"<(?![A-Za-z/?\$!])", RegexOptions.ExplicitCapture | RegexOptions.Compiled);
+        private static Regex _amps = new Regex(@"&(?!((#[0-9]+)|(#[xX][a-fA-F0-9]+)|([a-zA-Z][a-zA-Z0-9]*));)", RegexOptions.ExplicitCapture | RegexOptionsCompile);
+        private static Regex _angles = new Regex(@"<(?![A-Za-z/?\$!])", RegexOptions.ExplicitCapture | RegexOptionsCompile);
 
         /// <summary>
         /// Encode any ampersands (that aren't part of an HTML entity) and left or right angle brackets
@@ -1633,7 +1639,7 @@ namespace HeyRed.MarkdownSharp
             return _backslashEscapeTable[match.Value];
         }
 
-        private static Regex _unescapes = new Regex("\x1A" + "E\\d+E", RegexOptions.Compiled);
+        private static Regex _unescapes = new Regex("\x1A" + "E\\d+E", RegexOptionsCompile);
 
         /// <summary>
         /// swap back in all the special characters we've hidden
@@ -1756,7 +1762,7 @@ namespace HeyRed.MarkdownSharp
             return output.Append("\n\n").ToString();
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// this is to emulate what's evailable in PHP
